@@ -3,8 +3,8 @@ import controller from '../controllers/persons';
 
 const router = express.Router();
 
-router.get('/', controller.get);
-router.post('/', controller.create);
-router.patch('/:id', controller.update);
+router.get('/persons', controller.get);
+router.post('/persons', controller.create);
+router.patch('/person/:id', controller.update);
 
 export default router;

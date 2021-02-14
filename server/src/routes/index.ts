@@ -5,8 +5,8 @@ import DataRouter from './data';
 
 const router = express.Router();
 
-router.use('/groups', GroupsRouter);
-router.use('/persons', PersonsRouter);
+router.use('/', GroupsRouter);
+router.use('/', PersonsRouter);
 router.use('/data', DataRouter);
 
 export default router;

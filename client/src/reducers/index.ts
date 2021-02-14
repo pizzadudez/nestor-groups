@@ -1,8 +1,9 @@
-import { GET_DATA } from '../actions/types';
+import { DESELECT_TARGET, GET_DATA, SELECT_TARGET } from '../actions/types';
 
 export interface Group {
   id: number;
   name: string;
+  level: number;
   created_at: string;
   updated_at: string;
   belongs_to: number | null;
@@ -20,7 +21,13 @@ export interface Person {
   belongs_to: number | null;
 }
 
+export interface Selection {
+  type: string | undefined;
+  id: number | undefined;
+  belongs_to: number | undefined;
+}
 export interface State {
+  selection: Selection;
   groups: Group[];
   persons: Person[];
   groupsById: any;
@@ -33,6 +40,11 @@ type Action = {
 };
 
 const initialState: State = {
+  selection: {
+    type: undefined,
+    id: undefined,
+    belongs_to: undefined,
+  },
   groups: [],
   persons: [],
   groupsById: {},
@@ -41,8 +53,14 @@ const initialState: State = {
 
 export const reducer = (state = initialState, action: Action) => {
   switch (action.type) {
-    case GET_DATA: {
+    case GET_DATA:
       return {
+        ...state,
+        selection: {
+          type: undefined,
+          id: undefined,
+          belongs_to: undefined,
+        },
         ...action.payload,
         groupsById: Object.fromEntries(
           action.payload.groups.map((group: Group) => [group.id, group])
@@ -51,7 +69,25 @@ export const reducer = (state = initialState, action: Action) => {
           action.payload.persons.map((person: Person) => [person.id, person])
         ),
       };
+    case SELECT_TARGET: {
+      return {
+        ...state,
+        selection: {
+          type: action.payload.type,
+          id: action.payload.id,
+          belongs_to: action.payload.belongs_to,
+        },
+      };
     }
+    case DESELECT_TARGET:
+      return {
+        ...state,
+        selection: {
+          type: undefined,
+          id: undefined,
+          belongs_to: undefined,
+        },
+      };
     default: {
       return state;
     }

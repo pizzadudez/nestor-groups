@@ -3,6 +3,11 @@ import thunk from 'redux-thunk';
 import { reducer, State } from './reducers';
 
 const initialState: State = {
+  selection: {
+    type: undefined,
+    id: undefined,
+    belongs_to: undefined,
+  },
   groups: [],
   persons: [],
   groupsById: {},

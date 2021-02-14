@@ -6,13 +6,33 @@ exports.seed = async (knex) => {
   // Create 2 levels of groups
   const rootGroups = await knex('groups')
     .insert([{ name: 'g1' }, { name: 'g2' }])
-    .returning(['id', 'name']);
+    .returning(['id', 'name', 'level']);
   await knex('groups').insert([
-    { name: `${rootGroups[0].name}-g1`, belongs_to: rootGroups[0].id },
-    { name: `${rootGroups[0].name}-g2`, belongs_to: rootGroups[0].id },
-    { name: `${rootGroups[1].name}-g1`, belongs_to: rootGroups[1].id },
-    { name: `${rootGroups[1].name}-g2`, belongs_to: rootGroups[1].id },
-    { name: `${rootGroups[1].name}-g3`, belongs_to: rootGroups[1].id },
+    {
+      name: `${rootGroups[0].name}-g1`,
+      belongs_to: rootGroups[0].id,
+      level: rootGroups[0].level + 1,
+    },
+    {
+      name: `${rootGroups[0].name}-g2`,
+      belongs_to: rootGroups[0].id,
+      level: rootGroups[0].level + 1,
+    },
+    {
+      name: `${rootGroups[1].name}-g1`,
+      belongs_to: rootGroups[1].id,
+      level: rootGroups[1].level + 1,
+    },
+    {
+      name: `${rootGroups[1].name}-g2`,
+      belongs_to: rootGroups[1].id,
+      level: rootGroups[1].level + 1,
+    },
+    {
+      name: `${rootGroups[1].name}-g3`,
+      belongs_to: rootGroups[1].id,
+      level: rootGroups[1].level + 1,
+    },
   ]);
 
   // Add 3 persons to each group

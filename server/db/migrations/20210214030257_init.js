@@ -3,6 +3,7 @@ exports.up = function (knex) {
     .createTable('groups', (table) => {
       table.increments('id');
       table.string('name').notNullable().unique();
+      table.integer('level').notNullable().defaultTo(0);
 
       table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
       table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
