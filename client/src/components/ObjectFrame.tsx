@@ -4,6 +4,8 @@ import {Person, Group} from '../reducers'
 import {selectTarget, changeGroup} from '../actions'
 
 import Button from 'react-bootstrap/Button'
+import Popover from 'react-bootstrap/Popover'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 
 interface Props {
     group?: Group | undefined;
@@ -17,27 +19,45 @@ export const ObjectFrame:React.FC<Props> = ({group, person, disabled, selected, 
 	const dispatch = useDispatch()
 
 	const onSelectTarget = useCallback(() => {
-		dispatch(selectTarget({
-			type: group ? 'group' : 'person',
-			id: group ? group.id : person!.id,
-			belongs_to: group ? (group.belongs_to || undefined) : (person!.belongs_to || undefined)
-		}))
+		dispatch(selectTarget(group ? group! : person!))
 	}, [group, person, dispatch])
 	const onChangeGroup = useCallback(() => {
 		if (!group) return
 		dispatch(changeGroup(group.id))
 	}, [group, dispatch])
 
+  const popover = (
+    <Popover id="popover-basic">
+      <Popover.Title as="h3">Info</Popover.Title>
+      <Popover.Content>
+        <pre>
+          {JSON.stringify(group ? group : person, null, 2)}
+        </pre>
+      </Popover.Content>
+    </Popover>
+  );
+
   return(
-    <Button
-      variant={selected ? 'warning' : (group ? 'primary' : 'secondary')}
-      disabled={disabled && !selected}
-      value={group ? group!.id : person!.id}
-      size="sm"
-      style={{width: 240, margin: 1}}
-      onClick={(selectingGroup && !selected) ? onChangeGroup : onSelectTarget}
-    >
-      {group ? group.name : `${person!.first_name} ${person!.last_name}`}
-    </Button>
+    <div style={{display: 'flex'}}>
+      <Button
+          variant={selected ? 'success' : (group ? 'primary' : 'warning')}
+          disabled={disabled && !selected}
+          value={group ? group!.id : person!.id}
+          size="sm"
+          style={{width: 240, margin: 1}}
+          onClick={(selectingGroup && !selected) ? onChangeGroup : onSelectTarget}
+        >
+          {group ? group.name : `<${person!.job_title}> ${person!.first_name} ${person!.last_name} `}
+        </Button>
+      {selected && <OverlayTrigger trigger="click" placement="right" overlay={popover}>
+        <Button
+          variant="info"
+          size="sm"
+          // style={{position: 'absolute', top: 0, right: 0}}
+        >
+          Info
+        </Button>
+      </OverlayTrigger>}
+    </div>
   )
 }
